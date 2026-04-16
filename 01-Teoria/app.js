@@ -18,18 +18,18 @@
 // CREANDO UNA PROMESA
 // console.log("1. Hago el pedido en la pizzería...");
 
-// const pedirPizza = new Promise((resolve, reject) => {
-//   // Simulamos que cocinar la pizza toma 3 segundos
-//   setTimeout(() => {
-//     let hayQueso = false; // Cambiá esto a false para ver el error
+const pedirPizza = new Promise((resolve, reject) => {
+  // Simulamos que cocinar la pizza toma 3 segundos
+  setTimeout(() => {
+    let hayQueso = false; // Cambiá esto a false para ver el error
 
-//     if (hayQueso) {
-//       resolve("🍕 ¡Pizza lista y caliente!"); // ÉXITO
-//     } else {
-//       reject("❌ Error: Nos quedamos sin queso."); // FRACASO
-//     }
-//   }, 3000);
-// });
+    if (hayQueso) {
+      resolve("🍕 ¡Pizza lista y caliente!"); // ÉXITO
+    } else {
+      reject("❌ Error: Nos quedamos sin queso."); // FRACASO
+    }
+  }, 3000);
+});
 
 // console.log("2. Sigo charlando con mis amigos en la mesa...");
 
