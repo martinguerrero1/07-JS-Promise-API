@@ -13,6 +13,12 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+const kata1 = new Promise((resolve) => {
+   setTimeout(() => {
+      resolve("¡Promesa cumplida!");
+   }, 1000)
+});
+kata1.then((mensaje) => console.log(mensaje));
 
 /* --------------------------------------------------------------------------
    KATA 2: Promesa que Rechaza
@@ -21,6 +27,16 @@
    Asegurate de capturar ese error y mostrarlo por consola.
 -------------------------------------------------------------------------- */
 
+const kata2 = new Promise((resolve,reject) => {
+   const acceso = false;
+   if (acceso == false){
+      reject("Algo salió mal.");
+   }
+   else{
+      resolve("Todo salió bien.");
+   }
+})
+kata2.then((msj) => console.log(msj)).catch((error) => console.log(error));
 // TU CÓDIGO AQUÍ 👇
 
 /* --------------------------------------------------------------------------
@@ -32,6 +48,19 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+function verificarLuz(hayLuz){
+   const promesa = new Promise((resolve,reject) => {
+      if(hayLuz){
+         resolve("La luz está encendida");
+      }
+      else{
+         reject("Sin luz, no hay fiesta");
+      }
+   });
+   return promesa;
+}
+verificarLuz(true).then((resolve) => console.log(resolve)).catch((reject) => console.log(reject));
+verificarLuz(false).then((resolve) => console.log(resolve)).catch((reject) => console.log(reject));
 
 /* --------------------------------------------------------------------------
    KATA 4: Timer reutilizable
@@ -43,6 +72,14 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+function esperar(ms){
+   return new Promise((resolve) => {
+      setTimeout(() => {
+         resolve("Listo después de 2 segundos");
+      },ms);
+   })
+}
+esperar(2000).then(() => console.log("Listo después de 2 segundos"));
 
 /* --------------------------------------------------------------------------
    KATA 5: Simular un login
@@ -53,6 +90,16 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+function login(usuario, password){
+   return new Promise((resolve,reject) => {
+      if(usuario === 'admin' && password === '1234'){
+         resolve({ nombre: "Admin", rol: "superusuario" });
+      }
+      else{
+         reject("Credenciales incorrectas");
+      }
+   });
+};
 
 /* --------------------------------------------------------------------------
    KATA 6: Transformaciones en cadena
@@ -65,6 +112,10 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+const promesaDiez = new Promise((resolve) => {
+   resolve(10)
+});
+promesaDiez.then((resolve) => {resolve*2}).then((resolve) => {resolve+5}).finally((resolve) => console.log(resolve));
 
 /* --------------------------------------------------------------------------
    KATA 7: Siempre hay un bloque final
@@ -77,6 +128,18 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+function cargarDatos(exito){
+   return new Promise((resolve, reject) => {
+      setTimeout(() => {
+         if(exito){
+            resolve("Datos cargados ✅");
+         } else{
+            reject("Error al cargar ❌");
+         }
+      }, 1000)
+   });
+}
+cargarDatos(true).then((resolve) => console.log(resolve)).catch((reject) => console.log(reject)).finally(() => console.log("Carga finalizada, pase lo que pase."));
 
 /* --------------------------------------------------------------------------
    KATA 8: Promesa con número aleatorio
@@ -88,6 +151,20 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+function sacarNumero(){
+   const numero = Math.floor((Math.random()*10))+1;
+   return new Promise((resolve,reject) => {
+      if(numero >= 5){
+         resolve(`Ganaste! Número: ${numero}`);
+      } else{
+         reject(`Perdiste! Número: ${numero}`);
+      }
+   })
+}
+
+sacarNumero().then((resolve) => console.log(resolve)).catch((reject) => console.log(reject));
+sacarNumero().then((resolve) => console.log(resolve)).catch((reject) => console.log(reject));
+sacarNumero().then((resolve) => console.log(resolve)).catch((reject) => console.log(reject));
 
 /* --------------------------------------------------------------------------
    KATA 9: Simular la carga de un archivo
@@ -98,6 +175,15 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+function cargarArchivo(nombre, kb){
+   return new Promise((resolve) => {
+      setTimeout(() => {
+         resolve(`Archivo '${nombre}' cargado (${kb} KB)`);
+      }, kb*10)
+   })
+}
+
+cargarArchivo("Foto_cumpleaños", 200).then((respuesta) => console.log(respuesta));
 
 /* --------------------------------------------------------------------------
    KATA 10: Precio desde una base de datos simulada
@@ -109,6 +195,24 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+function obtenerPrecio(producto){
+   return new Promise((resolve,reject) => {
+      setTimeout(() => {
+         switch(producto){
+            case "manzana":
+               resolve(`${producto}: $150`);
+            case "banana":
+               resolve(`${producto}: $90`);
+            case "naranja":
+               resolve(`${producto}: $120`);
+            default:
+               reject(`Producto '${producto}' no encontrado`)
+         }
+      },800)
+   })
+}
+
+obtenerPrecio("manzana").then((respuesta) => console.log(respuesta)).catch((error) => console.log(error));
 
 module.exports = {
   kata1,
