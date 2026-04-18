@@ -18,18 +18,52 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function datosPikachu(){
+   try{
+      const responsePikachu = await fetch("https://pokeapi.co/api/v2/pokemon/pikachu");
+      const pikachu = await responsePikachu.json();
+      
+      console.log(pikachu.name, pikachu.id, pikachu.weight);
+   } catch(error){
+      console.log(error)
+   }
+}
+
+
 
 /* --------------------------------------------------------------------------
-   KATA 22: Manejo del error 404
-   Hacé una función async buscarPokemon(nombre) que:
-     - Haga fetch a la PokeAPI con el nombre recibido.
-     - Si respuesta.ok es false → lanzá un Error con
-       "No existe ningún Pokémon llamado 'nombre'."
-     - Si existe → mostrá nombre e id.
-   Probala con "mewtwo" (existe) y "pikapika" (no existe).
+KATA 22: Manejo del error 404
+Hacé una función async buscarPokemon(nombre) que:
+- Haga fetch a la PokeAPI con el nombre recibido.
+- Si respuesta.ok es false → lanzá un Error con
+"No existe ningún Pokémon llamado 'nombre'."
+- Si existe → mostrá nombre e id.
+Probala con "mewtwo" (existe) y "pikapika" (no existe).
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function buscarPokemon(nombre) {
+   try{
+      //traemos el objeto response de el pokemon
+      const responsePokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${nombre}`);
+      //verificamos que sea valido (.ok tiene que ser verdadero)
+      if(!responsePokemon.ok){
+         throw new Error(`No existe ningún Pokémon llamado ${nombre}.`)
+      }
+
+      //consumimos el body del objeto response con el .json(). En este caso nos va a devolver un objeto.
+      const pokemon = await responsePokemon.json();
+      console.log(`
+         Pokemon: ${pokemon.name} \n
+         ID: ${pokemon.id}
+         `)
+   } catch (error){
+      console.log(error);
+   }
+}
+
+buscarPokemon("mewtwo"); //existe
+buscarPokemon("pikapika"); //no existe
 
 /* --------------------------------------------------------------------------
    KATA 23: fetch a Rick & Morty API
@@ -38,17 +72,50 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function fetchRickMorty() {
+   try{
+      const resp = await fetch("https://rickandmortyapi.com/api/character/1");
+      const data = await resp.json();
+      
+      console.log(`
+         Nombre: ${data.name} \n
+         Especie: ${data.species} \n
+         Estado: ${data.status} \n
+         Origen; ${data.origin.name} 
+         `)
+   } catch(error){
+      console.log(error);
+   }
+}
 
 /* --------------------------------------------------------------------------
-   KATA 24: Mapear datos a una clase
-   Creá una clase Personaje con constructor(data) que guarde:
-     nombre, especie, estado, imagen.
-   Hacé el fetch del personaje con ID 3 (Rick Sanchez) de la API
-   de Rick & Morty e instanciá un objeto Personaje con los datos.
-   Mostrá el objeto instanciado.
+KATA 24: Mapear datos a una clase
+Creá una clase Personaje con constructor(data) que guarde:
+nombre, especie, estado, imagen.
+Hacé el fetch del personaje con ID 3 (Rick Sanchez) de la API
+de Rick & Morty e instanciá un objeto Personaje con los datos.
+Mostrá el objeto instanciado.
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+class Rick {
+   constructor(nombre, especie, estado, imagen){
+      this.nombre = nombre;
+      this.especie = especie;
+      this.estado = estado;
+      this.imagen = imagen;
+   }
+}
+
+async function crearRick() {
+      const resp = await fetch("https://rickandmortyapi.com/api/character/1");
+      const data = await resp.json();
+      
+      const rickSanchez = new Rick(data.name, data.species, data.status, data.image)
+      console.log(rickSanchez);
+}
+
+crearRick();
 
 /* --------------------------------------------------------------------------
    KATA 25: fetch de una lista
@@ -58,6 +125,19 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function topCincoPosts() {
+   const responseApiPost = await fetch("https://jsonplaceholder.typicode.com/posts");
+   const dataApiPost = await responseApiPost.json();
+
+
+   const topCincoPosts = dataApiPost.filter(post => post.id <= 5);
+   topCincoPosts.forEach(post => {
+      console.log(`ID: ${post.id} \nTitle: ${post.title}
+            `)
+   });
+}
+
+topCincoPosts();
 
 /* --------------------------------------------------------------------------
    KATA 26: fetch con URL dinámica
