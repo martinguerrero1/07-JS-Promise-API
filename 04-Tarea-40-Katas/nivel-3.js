@@ -79,7 +79,7 @@ async function fetchRickMorty() {
       
       console.log(`
          Nombre: ${data.name} \n
-         Especie: ${data.type} \n
+         Especie: ${data.species} \n
          Estado: ${data.status} \n
          Origen; ${data.origin.name} 
          `)
@@ -108,17 +108,14 @@ class Rick {
 }
 
 async function crearRick() {
-   try {
       const resp = await fetch("https://rickandmortyapi.com/api/character/1");
       const data = await resp.json();
       
-      return {nombre: ``}
-   } catch (error) {
-      console.log(error)
-   }
-  
-   
+      const rickSanchez = new Rick(data.name, data.species, data.status, data.image)
+      console.log(rickSanchez);
 }
+
+crearRick();
 
 /* --------------------------------------------------------------------------
    KATA 25: fetch de una lista
@@ -128,6 +125,19 @@ async function crearRick() {
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function topCincoPosts() {
+   const responseApiPost = await fetch("https://jsonplaceholder.typicode.com/posts");
+   const dataApiPost = await responseApiPost.json();
+
+
+   const topCincoPosts = dataApiPost.filter(post => post.id <= 5);
+   topCincoPosts.forEach(post => {
+      console.log(`ID: ${post.id} \nTitle: ${post.title}
+            `)
+   });
+}
+
+topCincoPosts();
 
 /* --------------------------------------------------------------------------
    KATA 26: fetch con URL dinámica
