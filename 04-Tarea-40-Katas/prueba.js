@@ -1,13 +1,13 @@
-async function topCincoPosts() {
-   const responseApiPost = await fetch("https://jsonplaceholder.typicode.com/posts");
-   const dataApiPost = await responseApiPost.json();
+async function filtroFetch() {
+   const response = await fetch(`https://rickandmortyapi.com/api/character`);
+   const data = await response.json();
 
-
-   const topCincoPosts = dataApiPost.filter(post => post.id <= 5);
-   topCincoPosts.forEach(post => {
-      console.log(`ID: ${post.id} \nTitle: ${post.title}
-            `)
-   });
+   const pjVivos = data.results.filter((personaje) => personaje.status === "Alive");
+   pjVivos.forEach(pj => {
+      console.log(`ID: ${pj.id}\nNombre: ${pj.name}
+         `)
+   })
+   console.log(`En total hay ${pjVivos.length} personajes vivos en la serie`)
 }
 
-topCincoPosts();
+filtroFetch();
