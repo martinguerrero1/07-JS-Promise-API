@@ -16,6 +16,17 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function promiseAll() {
+   const response = await Promise.all([fetch("https://pokeapi.co/api/v2/pokemon/bulbasaur"), fetch("https://rickandmortyapi.com/api/character/2")]);
+   const data = await Promise.all(response.map(resp => resp.json()))
+
+
+   console.log(`
+      Pokémon: ${data[0].name} | Personaje: ${data[1].name}
+      `)
+}
+
+promiseAll();
 
 /* --------------------------------------------------------------------------
    KATA 32: Promise.all para buscar 3 Pokémon a la vez
@@ -26,6 +37,23 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function promiseAll2(){
+   const responses = await Promise.all([
+      fetch("https://pokeapi.co/api/v2/pokemon/charmander"),
+      fetch("https://pokeapi.co/api/v2/pokemon/squirtle"),
+      fetch("https://pokeapi.co/api/v2/pokemon/gengar")
+   ]);
+
+   const data = await Promise.all(responses.map(resp => resp.json()));
+
+   // console.log(data.name)
+   data.forEach(pokemon => {
+      console.log(`Nombre: ${pokemon.name}\nTipo: ${pokemon.types[0].type.name}
+         `)
+   })
+}
+
+promiseAll2();
 
 /* --------------------------------------------------------------------------
    KATA 33: Promise.allSettled — mix de éxito y fallo
@@ -38,6 +66,25 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function promiseAllSttled(){
+   const responses = await Promise.allSettled([
+      fetch("https://pokeapi.co/api/v2/pokemon/pikachu"),
+      fetch("https://pokeapi.co/api/v2/pokemon/noexiste"),
+      fetch("https://pokeapi.co/api/v2/pokemon/eevee")
+   ]);
+
+   responses.forEach(response => {
+      if (response.value.status === 200){
+         console.log("✅ nombre encontrado");
+      }
+      if (response.value.status === 404){
+         console.log("❌ falló este pokémon");
+      }
+   })
+}
+
+promiseAllSttled();
+
 
 /* --------------------------------------------------------------------------
    KATA 34: Promise.race — la más rápida gana
@@ -50,6 +97,15 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function promiseRace(){
+   const promesaA = new Promise((resolve) => {setTimeout(() => {resolve("Servidor A respondió")},800)});
+   const promesaB = new Promise((resolve) => {setTimeout(() => {resolve("Servidor B respondió")},300)});
+   const promesaC = new Promise((resolve) => {setTimeout(() => {resolve("Servidor C respondió")},1200)});
+
+   const promesaRapida = Promise.race([promesaA, promesaB, promesaC]).then((respuesta) => console.log(respuesta));
+}
+
+promiseRace();
 
 /* --------------------------------------------------------------------------
    KATA 35: Mapear un array de IDs a promesas con Promise.all
@@ -60,6 +116,19 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function IDsPromiseAll() {
+   const ids = [1, 2, 3, 4, 5];
+   
+   const arrayPromises = ids.map((id) => fetch(`https://jsonplaceholder.typicode.com/users/${id}`));
+
+   const responses = await Promise.all(arrayPromises);
+   const data = await Promise.all((await responses).map(resp => resp.json()));
+
+   data.forEach(user => console.log(`${user.name}
+      `));
+}
+
+IDsPromiseAll();
 
 /* --------------------------------------------------------------------------
    KATA 36: Encadenamiento largo de .then()
@@ -74,6 +143,13 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+fetch("https://pokeapi.co/api/v2/pokemon/jigglypuff") //obtenemos el response
+   .then(response => response.json()) //obtenemos el body text
+   .then(data => data.types) // accedemos a la propiedad types
+   .then(arrayTypes => arrayTypes.map(array => array.type.name)) //acedemos a los nombres de todos los tipos que hay
+   .then(array => array.map(type => type[0].toUpperCase() + type.slice(1))) //cambiamos la primera letra de los nombres a mayuscula
+   .then(array => array.join(" / ")) //unimos los nombres en un solo string
+   .then(string => console.log("Tipos de Jigglypuff:",string)); //imprimimos
 
 /* --------------------------------------------------------------------------
    KATA 37: Función async genérica reutilizable
@@ -88,6 +164,24 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+function nombreAltura(objeto){
+   return {nombre: objeto.name, altura: objeto.height};
+}
+
+function nombreEmail(objeto){
+   return {nombre: objeto.name, email: objeto.email};
+}
+
+
+async function fetchYMapear(url, transformar) {
+   const response = await fetch(url);
+   const data = await response.json();
+
+   return transformar(data);
+}
+
+fetchYMapear("https://pokeapi.co/api/v2/pokemon/pikachu", nombreAltura);
+fetchYMapear("https://jsonplaceholder.typicode.com/users/1", nombreEmail);
 
 /* --------------------------------------------------------------------------
    KATA 38: Paginación — combinar resultados de 2 páginas
@@ -100,6 +194,29 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function combinarResultados() {
+   const responses = await Promise.all([
+      fetch("https://rickandmortyapi.com/api/character?page=1"),
+      fetch("https://rickandmortyapi.com/api/character?page=2")
+   ]) //responses
+   const data = await Promise.all(responses.map(response => response.json())) //objeto parseado
+
+   //separo datos para manejarlo con mas facilidad
+   const pagina1 = data[0].results
+   const pagina2 = data[1].results
+
+   //concateno los datos
+   const pagesConcated = pagina1.concat(pagina2);
+   pagesConcated.reverse() //doy vuelta el orden para mostrar los ultimos 3
+
+   console.log(pagesConcated.length) //muestro cantidad de resultados con las dos paginas concatenadas
+   for (let i = 0; i < 3; i++){ //muestro tres resultados de la lista dada vuelta
+      console.log(`\nNombre: ${pagesConcated[i].name}`)
+   }
+}
+
+combinarResultados();
+
 
 /* --------------------------------------------------------------------------
    KATA 39: Búsqueda condicional (fallback entre APIs)
@@ -115,6 +232,35 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function buscarPersonaje(nombre) {
+   try {
+      let response = await fetch(`https://rickandmortyapi.com/api/character/?name=${nombre}`);
+
+      if(response.status === 404){
+
+         response = await fetch(`https://jsonplaceholder.typicode.com/users?username=${nombre}`);
+         const data = await response.json();
+         
+         if(data.length === 0){
+            throw new Error("No se encontró en ninguna API");
+         }
+
+         console.log(data[0]);
+         return data[0];
+      }
+
+
+      const data = await response.json();
+      console.log(data.results[0]);
+      return data.results[0];
+
+   } catch (error) {
+      console.log(error.message);
+   }
+}
+
+buscarPersonaje("rick");
+buscarPersonaje("Bret");
 
 /* --------------------------------------------------------------------------
    KATA 40: 🏆 CHALLENGE FINAL — Equipo Pokémon completo
@@ -129,6 +275,35 @@
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+
+const nombres = ["pikachu", "charizard", "mewtwo", "snorlax"];
+
+class PokemonLimpio{
+   constructor(id, nombre, altura, peso, tipos){
+      this.id = id;
+      this.nombre = nombre;
+      this.altura = altura;
+      this.peso = peso;
+      this.tipos = tipos;
+   }
+}
+
+async function fetchPokemones(pokemones) {
+   const fetchedPokemones = pokemones.map(pokemon => fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`))
+
+   const responses = await Promise.all(fetchedPokemones);
+   const data = await Promise.all(responses.map(response => response.json())); //array de cada pokemon como objeto
+
+   const instanciasPokemones = data.map(objPokemon => {
+      return new PokemonLimpio(objPokemon.id, objPokemon.name, objPokemon.height, objPokemon.weight, objPokemon.types)
+   });
+
+   console.table(instanciasPokemones);
+}
+
+fetchPokemones(nombres);
+
+
 
 module.exports = {
   kata31,
