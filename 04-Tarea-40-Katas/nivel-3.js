@@ -24,12 +24,12 @@ async function datosPikachu(){
       const pikachu = await responsePikachu.json();
       
       console.log(pikachu.name, pikachu.id, pikachu.weight);
-   } catch(error){
       console.log(error)
+   } catch(error){
    }
 }
 
-
+datosPikachu();
 
 /* --------------------------------------------------------------------------
 KATA 22: Manejo del error 404
@@ -148,6 +148,20 @@ topCincoPosts();
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function obtenerUsuario(id) {
+   const response = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`);
+   const data = await response.json();
+
+   console.log(`
+      Nombre: ${data.name} \n
+      Email: ${data.email} \n
+      Ciudad: ${data.address.city}
+      `)
+}
+
+obtenerUsuario(1);
+obtenerUsuario(3);
+obtenerUsuario(7);
 
 /* --------------------------------------------------------------------------
    KATA 27: fetch y filtrar un array
@@ -158,6 +172,19 @@ topCincoPosts();
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function filtroFetch() {
+   const response = await fetch(`https://rickandmortyapi.com/api/character`);
+   const data = await response.json();
+
+   const pjVivos = data.results.filter((personaje) => personaje.status === "Alive");
+   pjVivos.forEach(pj => {
+      console.log(`ID: ${pj.id}\nNombre: ${pj.name}
+         `)
+   })
+   console.log(`En total hay ${pjVivos.length} personajes vivos en la serie`)
+}
+
+filtroFetch();
 
 /* --------------------------------------------------------------------------
    KATA 28: Fetch encadenado (two-step)
@@ -169,6 +196,21 @@ topCincoPosts();
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function post_User() {
+   const respPost = await fetch(`https://jsonplaceholder.typicode.com/posts/1`);
+   const dataPost = await respPost.json();
+
+   const respUser = await fetch(`https://jsonplaceholder.typicode.com/users/${dataPost.id}`)
+   const dataUser = await respUser.json();
+
+   console.log(`
+      Nombre: ${dataUser.name}
+      Titulo del post: ${dataPost.title}
+      `)
+}
+
+post_User();
+
 
 /* --------------------------------------------------------------------------
    KATA 29: Buscar Pokémon por tipo
@@ -179,7 +221,17 @@ topCincoPosts();
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function pokemonTipoFuego(){
+   const resp = await fetch("https://pokeapi.co/api/v2/type/fire");
+   const data = await resp.json();
 
+   for (let i = 0; i < 8; i++){
+      console.log(`
+         ${data.pokemon[i].pokemon.name}`)
+   }
+}
+
+pokemonTipoFuego();
 /* --------------------------------------------------------------------------
    KATA 30: Mostrar solo campos seleccionados
    Hacé un fetch de los primeros 10 comentarios:
@@ -190,6 +242,15 @@ topCincoPosts();
 -------------------------------------------------------------------------- */
 
 // TU CÓDIGO AQUÍ 👇
+async function comentariosLimpios() {
+   const resp = await fetch("https://jsonplaceholder.typicode.com/comments?_limit=10");
+   const data = await resp.json();
+
+   const arrayLimpio = data.map((comment) => {return {id: comment.id, nombre: comment.name, email: comment.email}});
+   console.log(arrayLimpio);
+}
+
+comentariosLimpios();
 
 module.exports = {
   kata21,
